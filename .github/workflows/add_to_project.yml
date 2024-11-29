@@ -20,9 +20,8 @@ jobs:
         with:
           token: ${{ secrets.ADD_TO_PROJECT_PAT }}
       - name: Debug Secrets
-        run: echo "Secret is: ${{ secrets.ADD_TO_PROJECT_PAT }}"
-        env:
-          ADD_TO_PROJECT_PAT: ${{ secrets.ADD_TO_PROJECT_PAT }}
+        run: |
+          echo "Secret is: ${{ secrets.ADD_TO_PROJECT_PAT }}"
       - name: Add to project
         uses: actions/add-to-project@v0.5.0
         with:
