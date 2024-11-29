@@ -1,9 +1,6 @@
-name: Add new issue or pull request to sl1 project
+name: Trigger secondary workflow
 
 on:
-  issues:
-    types:
-      - opened
   pull_request:
     types:
       - opened
@@ -11,19 +8,13 @@ on:
       - reopened
 
 jobs:
-  add-to-project:
-    name: Add issue or pull request to project
+  trigger:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.ADD_TO_PROJECT_PAT }}
-      - name: Debug Secrets
+      - name: Trigger secondary workflow
         run: |
-          echo "Secret is: ${{ secrets.ADD_TO_PROJECT_PAT }}"
-      - name: Add to project
-        uses: actions/add-to-project@v0.5.0
-        with:
-          project-url: https://github.com/orgs/openMSL/projects/1
-          github-token: ${{ secrets.ADD_TO_PROJECT_PAT }}
+          curl -X POST \
+          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }}/actions/workflows/secondary-workflow.yml/dispatches \
+          -d '{"ref":"${{ github.ref }}"}'
